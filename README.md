@@ -1,12 +1,11 @@
 # Thesaurus.CodeChallenge
-Assingment to create a .NET console application that implements an interface (IThesaurus).
+Assingment to create a .NET web API and ClassLib to thesaurus solution
 
-Application built on Cross Platform framework using **.Net 5, C#, Entity Framework, SQL server.**
-Serlog is used for logging
+Application built on Cross Platform framework using **.Net 5, WebAPI, C#, Entity Framework, SQL server, Blazor.**
+Serilog is used for logging webapi.
 
-It is an console application with .logic packed in .Net standard library so that it can be pluged in to other type of application like Web API.
-
-In order to run this application you musts set the database. you can find the database script in the project.
-SQL connection string configurable in appSetting.json file, if needed you can update connection string.
+**In order to run this application you musts set the database. you can find the database script in the project.
+SQL connection string configurable in appSetting.json file, if needed you can update connection string.**
+You can also configure serilog output in appSetting.json
 
 **Thank you for showing interest in my profile and giving me opportunity to work on the test assingment.**
