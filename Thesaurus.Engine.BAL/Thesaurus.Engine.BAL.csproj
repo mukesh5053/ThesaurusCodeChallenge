@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <AssemblyName>Thesaurus.Engine.BAL</AssemblyName>
+    <RootNamespace>Thesaurus.Engine.BAL</RootNamespace>
+  </PropertyGroup>
+
+  
+
+  <ItemGroup>
+    <ProjectReference Include="..\Thesaurus.Engine.Common\Thesaurus.Engine.Common.csproj" />
+    <ProjectReference Include="..\Thesaurus.Engine.DAL\Thesaurus.Engine.DAL.csproj" />
+  </ItemGroup>
+
+</Project>

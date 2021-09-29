@@ -1,0 +1,85 @@
+﻿@page "/Add"
+@using System.ComponentModel.DataAnnotations;
+@using System.Net.Http
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+<h1>Add word and synonyms to the thesaurus</h1>
+
+<div class="container border">
+    <h3>Synonyms</h3>
+    <hr />
+    <EditForm Model="model">
+        <DataAnnotationsValidator />
+        <div>
+
+            <label>Enter a word</label>
+            <InputText @bind-Value="model.Text" />
+            <ValidationMessage For="() => model.Text" />
+        </div>
+        <div>
+            <label>Click to add Synonyms</label>
+            <button @onclick="AddValue" class="btn btn-primary">+</button>
+        </div>
+        @for (int i = 0; i < values.Count; i++)
+        {
+            int index = i;
+            <div>
+                <input type="text" @onchange="(e) => UpdateValue(index, e.Value.ToString())" value="@values[i]" class="form-control" />
+                <button @onclick="() => RemoveValue(index)" class="btn btn-outline-danger">Remove</button>
+            </div>
+        }
+        <hr />
+        <div>
+            <button @onclick="HandleSubmit" type="submit" class="btn btn-success">Submit</button>
+        </div>
+        <hr />
+    </EditForm>
+
+</div>
+@code {
+    Model model = new Model();
+    class Model
+    {
+        [Required(ErrorMessage = "Enter a word")]
+        [StringLength(50, ErrorMessage = "That word is too long")]
+        public string Text { get; set; }
+    }
+
+    private List<string> values = new List<string>();
+
+    private void AddValue() => values.Add("");
+    private void UpdateValue(int i, string value) => values[i] = value;
+    private void RemoveValue(int i) => values.RemoveAt(i);
+    private async Task HandleSubmit()
+    {
+        try
+        {
+            values = values.Where(x => !string.IsNullOrEmpty(x)).ToList();
+            if (values.Count() == 0)
+            {
+                await JS.InvokeAsync<object>("alert", "Atleast one synonyms should be enter!");
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(model.Text))
+            {
+                var listValues = values.ToList();
+                listValues.Add(model.Text);
+                await Http.PostAsJsonAsync($"api/thesaurus", listValues);
+                await JS.InvokeAsync<object>("alert", "Record added successfully.");
+                values.Clear();
+                model = new Model();
+
+            }
+        }
+        catch (Exception ex)
+        {
+
+            Console.WriteLine(ex.ToString());
+        }
+
+    }
+
+}
+

@@ -1,0 +1,75 @@
+﻿@page "/Search"
+@using System.ComponentModel.DataAnnotations;
+@using System.Net.Http
+@inject HttpClient Http
+
+<h1>Find Synonyms</h1>
+
+<EditForm Model="model">
+    <DataAnnotationsValidator />
+    <div>
+        <InputText @bind-Value="model.Text" />
+        <ValidationMessage For="() => model.Text" />
+    </div>
+    <div>
+        <button class="btn btn-primary" type="submit" @onclick="SearchSynonyms">Find</button>
+    </div>
+    @if (  _isProcessing)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else if(_words !=null )
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Synonyms</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var word in _words)
+                {
+                    <tr>
+                        <td>@word</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+</EditForm>
+
+@code {
+
+    Model model = new Model();
+
+    class Model
+    {
+        [Required(ErrorMessage = "Enter a word")]
+        [StringLength(50, ErrorMessage = "That word is too long")]
+        public string Text { get; set; }
+    }
+
+    private IEnumerable<string> _words = null;
+    private bool _isProcessing = false;
+
+    private async Task SearchSynonyms()
+    {
+        _words = null;
+        _isProcessing = true;
+        try
+        {
+            if (!string.IsNullOrEmpty(model.Text))
+            {
+                _words = await Http.GetFromJsonAsync<string[]>($"api/thesaurus/{model.Text}");
+            }
+        }
+        catch (Exception ex)
+        {
+
+            Console.WriteLine(ex.ToString());
+        }
+
+        _isProcessing = false;
+    }
+}
